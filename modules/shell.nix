@@ -15,7 +15,9 @@
       la = "ls -A";
       ll = "ls -lh";
       lt = "ls -lhtr";
-      hm-switch = "nix run ~/nix -- switch --flake ~/nix";
+      # -b hm-backup: back up any pre-existing unmanaged file
+      # (e.g. a distro .bashrc) before Home Manager takes it over.
+      hm-switch = "nix run ~/nix -- switch -b hm-backup --flake ~/nix";
       hm-update = "nix flake update ~/nix";
     };
 

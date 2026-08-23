@@ -15,7 +15,7 @@
 
 | 命令 | 作用 |
 | --- | --- |
-| `nix run ~/nix -- switch --flake ~/nix` | 构建并应用配置（alias: `hm-switch`） |
+| `nix run ~/nix -- switch -b hm-backup --flake ~/nix` | 构建并应用配置（alias: `hm-switch`；`-b hm-backup` 会把将被覆盖的旧文件备份为 `*.hm-backup`） |
 | `nix flake update ~/nix` | 更新依赖锁定文件 `flake.lock`（alias: `hm-update`） |
 | `nix fmt` | 用 nixfmt 格式化仓库内所有 Nix 文件 |
 | `nix run ~/nix -- news` | 查看 Home Manager 最近的变更公告 |
@@ -46,5 +46,5 @@ home-manager.url = "github:nix-community/home-manager/release-26.05";
 ## 注意事项
 
 - `home.stateVersion` 只在跨版本升级且阅读过 release notes 后修改，不要随便动。
-- 首次 switch 后 `~/.bashrc`、`~/.gitconfig` 等文件由 Home Manager 接管（原文件被替换为指向 nix store 的符号链接）。
+- 首次 switch 后 `~/.bashrc` 等文件由 Home Manager 接管（原文件因 `-b hm-backup` 被备份为 `~/.bashrc.hm-backup`）。
 - 登录 shell 仍是系统的 `/bin/bash`；若想用 Home Manager 的 bash 作为登录 shell，需要 root 把 `~/.nix-profile/bin/bash` 加入 `/etc/shells` 再 `chsh`。
