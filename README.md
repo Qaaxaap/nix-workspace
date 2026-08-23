@@ -24,7 +24,7 @@
 
 | 文件 | 作用 |
 | --- | --- |
-| `flake.nix` | 固定 nixpkgs / home-manager 输入，导出 `homeConfigurations.qaaxaap` |
+| `flake.nix` | 固定 nixpkgs / home-manager 输入，导出 `homeConfigurations.Qaaxaap` |
 | `home.nix` | 入口：用户名、home 目录、`stateVersion` |
 | `modules/defaults.nix` | 环境变量、常备小工具、任意 home 文件 |
 | `modules/shell.nix` | bash 配置（历史、别名） |

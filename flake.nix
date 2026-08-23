@@ -24,7 +24,9 @@
       formatter.${system} = pkgs.nixfmt;
 
       # Standalone Home Manager (non-NixOS) configuration for this machine.
-      homeConfigurations.qaaxaap = home-manager.lib.homeManagerConfiguration {
+      # NOTE: the attribute name must match `home.username`, otherwise
+      # `home-manager switch --flake ~/nix` cannot find it.
+      homeConfigurations.Qaaxaap = home-manager.lib.homeManagerConfiguration {
         inherit pkgs;
         modules = [
           ./home.nix
