@@ -1,0 +1,43 @@
+{
+  description = "Qaaxaap's Home Manager configuration";
+
+  inputs = {
+    # Follow unstable, matching nixpkgs master.
+    # To pin a stable release instead, use e.g.:
+    #   nixpkgs.url = "github:nixos/nixpkgs/nixos-26.05";
+    #   home-manager.url = "github:nix-community/home-manager/release-26.05";
+    nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
+
+    home-manager = {
+      url = "github:nix-community/home-manager";
+      # Reuse our nixpkgs instead of home-manager's own copy.
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+  };
+
+  outputs = { nixpkgs, home-manager, ... }:
+    let
+      system = "x86_64-linux";
+      pkgs = nixpkgs.legacyPackages.${system};
+    in {
+      # `nix fmt` support
+      formatter.${system} = pkgs.nixfmt-rfc-style;
+
+      # Standalone Home Manager (non-NixOS) configuration for this machine.
+      homeConfigurations.qaaxaap = home-manager.lib.homeManagerConfiguration {
+        inherit pkgs;
+        modules = [
+          ./home.nix
+          ./modules/defaults.nix
+          ./modules/shell.nix
+          ./modules/cli.nix
+        ];
+      };
+
+      # Convenience: `nix run ~/nix -- switch --flake ~/nix`
+      apps.${system}.default = {
+        type = "app";
+        program = "${home-manager.packages.${system}.default}/bin/home-manager";
+      };
+    };
+}
