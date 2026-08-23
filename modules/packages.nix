@@ -13,6 +13,7 @@
     ripgrep
     fd
     fzf # 补全/按键绑定需自己在 .zshrc 里 source，见 README
+    logseq
 
     # 常用 CLI
     jq

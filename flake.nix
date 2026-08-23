@@ -18,7 +18,17 @@
   outputs = { self, nixpkgs, home-manager, ... }:
     let
       system = "x86_64-linux";
-      pkgs = nixpkgs.legacyPackages.${system};
+      pkgs = import nixpkgs {
+        inherit system;
+        config = {
+          # Logseq 依赖的 electron 39 已 EOL，nixpkgs 将其标记为
+          # insecure；必须在此显式放行，否则求值直接失败。
+          permittedInsecurePackages = [ "electron-39.8.10" ];
+
+          # 将来需要非自由包时取消注释:
+          # allowUnfree = true;
+        };
+      };
     in {
       # `nix fmt` support
       formatter.${system} = pkgs.nixfmt;
