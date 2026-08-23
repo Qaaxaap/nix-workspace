@@ -4,14 +4,12 @@
   home.username = "Qaaxaap";
   home.homeDirectory = "/home/Qaaxaap";
 
-  # The Home Manager release this configuration was created with.
-  # Do NOT bump this casually: it controls backwards-compatibility
-  # migrations. Read the release notes before changing it.
+  # Home Manager 兼容性标记，创建后不要随便改。
   home.stateVersion = "26.05";
 
-  # Keep Home Manager itself in the user profile.
+  # 把 home-manager 命令本身装进用户 profile（不接管任何配置文件）。
   programs.home-manager.enable = true;
 
-  # Standard XDG base directories (~/.config, ~/.cache, ...) and env vars.
-  xdg.enable = true;
+  # 少量"顺手"的包也可以直接加在这里：
+  # home.packages = [ pkgs.xxx ];
 }

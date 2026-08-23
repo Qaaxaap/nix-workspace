@@ -30,9 +30,8 @@
         inherit pkgs;
         modules = [
           ./home.nix
-          ./modules/defaults.nix
+          ./modules/packages.nix
           ./modules/shell.nix
-          ./modules/cli.nix
         ];
       };
 

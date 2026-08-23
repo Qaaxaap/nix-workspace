@@ -1,7 +1,8 @@
-# Home Manager 配置（flake）
+# Home Manager（flake）—— 包管理器用法
 
-在 LFS 上以独立（standalone）方式使用 Home Manager，不依赖 NixOS。
-跟随 **nixpkgs `nixos-unstable` / home-manager `master`**（unstable，与 NixOS 上习惯一致）。
+在 LFS 上以独立（standalone）方式使用 Home Manager，**只当包管理器用**：
+装包、升级、回滚，不接管任何已有配置文件（`.zshrc`、`.bashrc`、git 配置等一律不碰）。
+跟随 **nixpkgs `nixos-unstable` / home-manager `master`**。
 
 ## 前置要求
 
@@ -11,14 +12,29 @@
   experimental-features = nix-command flakes
   ```
 
+- PATH 无需配置：`/etc/profile.d/nix-daemon.sh` 已把 `~/.nix-profile/bin` 加进登录 shell 的 PATH。
+
 ## 日常命令
 
 | 命令 | 作用 |
 | --- | --- |
-| `nix run ~/nix -- switch -b hm-backup --flake ~/nix` | 构建并应用配置（alias: `hm-switch`；`-b hm-backup` 会把将被覆盖的旧文件备份为 `*.hm-backup`） |
-| `nix flake update ~/nix` | 更新依赖锁定文件 `flake.lock`（alias: `hm-update`） |
-| `nix fmt` | 用 nixfmt 格式化仓库内所有 Nix 文件 |
-| `nix run ~/nix -- news` | 查看 Home Manager 最近的变更公告 |
+| `nix run ~/nix -- switch -b hm-backup --flake ~/nix` | 构建并应用配置（`-b hm-backup`：万一将来接管配置文件时自动备份原件） |
+| `nix flake update ~/nix` | 更新依赖锁定文件 `flake.lock` |
+| `nix fmt` | 格式化仓库内所有 Nix 文件 |
+| `nix run ~/nix -- news` | 查看 Home Manager 更新公告 |
+
+> 可在自己的 `.zshrc` 里加两行（完全可选，HM 不会替你加）：
+>
+> ```zsh
+> alias hm-switch='nix run ~/nix -- switch -b hm-backup --flake ~/nix'
+> alias hm-update='nix flake update ~/nix'
+> ```
+
+## 装包 / 卸包
+
+编辑 [`modules/packages.nix`](./modules/packages.nix)，在 `home.packages` 列表里加/删一行，然后 `nix run ~/nix -- switch -b hm-backup --flake ~/nix`。包只会出现在 `~/.nix-profile/bin`，不动任何点文件。
+
+回滚上次变更：`home-manager generations` 查看，`~/.nix-profile/bin/home-manager switch --generations <N>` 切换。
 
 ## 目录结构
 
@@ -26,11 +42,15 @@
 | --- | --- |
 | `flake.nix` | 固定 nixpkgs / home-manager 输入，导出 `homeConfigurations.Qaaxaap` |
 | `home.nix` | 入口：用户名、home 目录、`stateVersion` |
-| `modules/defaults.nix` | 环境变量、常备小工具、任意 home 文件 |
-| `modules/shell.nix` | bash 配置（历史、别名） |
-| `modules/cli.nix` | git / direnv / fzf 与常用 CLI 工具 |
+| `modules/packages.nix` | **包列表（主要编辑这个文件）** |
+| `modules/shell.nix` | 预留：目前为空。将来想托管 `~/.zshrc` 时取消注释示例 |
 
-新增模块只需在 `flake.nix` 的 `modules = [ ... ]` 列表里加一行。
+## 什么是"接管配置文件"？
+
+`programs.git`、`programs.zsh`、`programs.bash` 这类模块启用后，HM 会把对应点文件
+（`~/.zshrc`、`~/.gitconfig` 等）替换成指向 nix store 的符号链接，内容改由 Nix 配置生成。
+本配置目前**全部未启用**；将来想托管时，原文件会因 `-b hm-backup` 自动备份为 `*.hm-backup`，
+在 `modules/shell.nix` 里已有 zsh 示例。
 
 ## 切到稳定版
 
@@ -41,10 +61,10 @@ nixpkgs.url = "github:nixos/nixpkgs/nixos-26.05";
 home-manager.url = "github:nix-community/home-manager/release-26.05";
 ```
 
-然后 `nix flake update ~/nix && nix run ~/nix -- switch --flake ~/nix`。
+然后 `nix flake update ~/nix && nix run ~/nix -- switch -b hm-backup --flake ~/nix`。
 
 ## 注意事项
 
 - `home.stateVersion` 只在跨版本升级且阅读过 release notes 后修改，不要随便动。
-- 首次 switch 后 `~/.bashrc` 等文件由 Home Manager 接管（原文件因 `-b hm-backup` 被备份为 `~/.bashrc.hm-backup`）。
-- 登录 shell 仍是系统的 `/bin/bash`；若想用 Home Manager 的 bash 作为登录 shell，需要 root 把 `~/.nix-profile/bin/bash` 加入 `/etc/shells` 再 `chsh`。
+- fzf / direnv 只装了二进制；想让它们挂进 zsh，需要在你的 `.zshrc` 里自己加 hook 行。
+- 登录 shell 仍是系统的 `/usr/bin/zsh`；若想用 HM 装的 zsh，需要 root 把 `~/.nix-profile/bin/zsh` 加入 `/etc/shells` 再 `chsh`。
