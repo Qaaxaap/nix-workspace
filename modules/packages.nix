@@ -19,6 +19,7 @@
     tree
     htop
     direnv # 需自己在 .zshrc 加: eval "$(direnv hook zsh)"
+    nvchecker  s-tui  scour  opencc
 
     # 按需取消注释
     # eza
@@ -31,6 +32,8 @@
       ps: with ps; [
         torch
         torchvision
+        numpy  scipy  pandas  matplotlib  scikit-learn  scikit-image  networkx
+        jupyterlab
       ]
     ))
   ];
