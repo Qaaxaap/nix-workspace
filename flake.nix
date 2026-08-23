@@ -21,7 +21,7 @@
       pkgs = nixpkgs.legacyPackages.${system};
     in {
       # `nix fmt` support
-      formatter.${system} = pkgs.nixfmt-rfc-style;
+      formatter.${system} = pkgs.nixfmt;
 
       # Standalone Home Manager (non-NixOS) configuration for this machine.
       homeConfigurations.qaaxaap = home-manager.lib.homeManagerConfiguration {
@@ -38,6 +38,7 @@
       apps.${system}.default = {
         type = "app";
         program = "${home-manager.packages.${system}.default}/bin/home-manager";
+        meta.description = "Home Manager CLI";
       };
     };
 }
