@@ -22,6 +22,7 @@
 | `nix flake update ~/nix` | 更新依赖锁定文件 `flake.lock` |
 | `nix fmt` | 格式化仓库内所有 Nix 文件 |
 | `nix run ~/nix -- news` | 查看 Home Manager 更新公告 |
+| `nix develop ~/nix` | 进入默认 devShell（与 HM 包集同源 + git/nixfmt），退出 `exit` |
 
 > 可在自己的 `.zshrc` 里加两行（完全可选，HM 不会替你加）：
 >
@@ -40,9 +41,9 @@
 
 | 文件 | 作用 |
 | --- | --- |
-| `flake.nix` | 固定 nixpkgs / home-manager 输入，导出 `homeConfigurations.Qaaxaap` |
+| `flake.nix` | 固定 nixpkgs / home-manager 输入，导出 `homeConfigurations.Qaaxaap`、默认 app 和默认 devShell |
 | `home.nix` | 入口：用户名、home 目录、`stateVersion` |
-| `modules/packages.nix` | **包列表（主要编辑这个文件）** |
+| `modules/packages.nix` | **包列表（唯一数据源：HM 安装和 devShell 都从这里取）** |
 | `modules/shell.nix` | 预留：目前为空。将来想托管 `~/.zshrc` 时取消注释示例 |
 
 ## 什么是"接管配置文件"？

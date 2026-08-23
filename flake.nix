@@ -15,7 +15,7 @@
     };
   };
 
-  outputs = { nixpkgs, home-manager, ... }:
+  outputs = { self, nixpkgs, home-manager, ... }:
     let
       system = "x86_64-linux";
       pkgs = nixpkgs.legacyPackages.${system};
@@ -40,6 +40,15 @@
         type = "app";
         program = "${home-manager.packages.${system}.default}/bin/home-manager";
         meta.description = "Home Manager CLI";
+      };
+
+      # Default dev shell: `nix develop ~/nix`.
+      # Same toolset that Home Manager installs (single source of truth in
+      # modules/packages.nix), plus git and the flake formatter.
+      devShells.${system}.default = pkgs.mkShell {
+        packages =
+          self.homeConfigurations.Qaaxaap.config.home.packages
+          ++ (with pkgs; [ git nixfmt ]);
       };
     };
 }

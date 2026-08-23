@@ -26,5 +26,12 @@
     # zoxide
     # tmux
     # du-dust
+    # Python
+    (python3.withPackages (
+      ps: with ps; [
+        torch
+        torchvision
+      ]
+    ))
   ];
 }
