@@ -8,6 +8,7 @@
   home.packages = with pkgs; [
     # Nix 相关
     nix-output-monitor # nom build / nom develop
+    nh
 
     # 搜索 / 文件
     ripgrep
