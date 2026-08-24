@@ -10,6 +10,9 @@
   # 把 home-manager 命令本身装进用户 profile（不接管任何配置文件）。
   programs.home-manager.enable = true;
 
+  xdg.enable=true;
+  xdg.mime.enable=true;
+  targets.genericLinux.enable=true;
   # 少量"顺手"的包也可以直接加在这里：
   # home.packages = [ pkgs.xxx ];
 }
