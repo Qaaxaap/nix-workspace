@@ -1,4 +1,9 @@
-{ config, pkgs, ... }: {
+{ config, pkgs, ... }:
+let
+  # 1
+  link = config.lib.file.mkOutOfStoreSymlink;
+in
+{
   # 默认空配置 —— Home Manager 不会接管任何 shell 配置文件。
   #
   # 将来如果想让 HM 管理 ~/.zshrc（原文件会被 -b hm-backup 自动备份），
@@ -18,4 +23,7 @@
   #     plugins... 等等
   #   '';
   # };
+    xdg.configFile = {
+      "nvim".source = link "${config.home.homeDirectory}/nix/config/nvim-dots";
+    };
 }

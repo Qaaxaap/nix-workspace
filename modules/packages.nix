@@ -9,6 +9,7 @@
     # Nix 相关
     nix-output-monitor # nom build / nom develop
     nh
+    neovim
 
     # 搜索 / 文件
     ripgrep

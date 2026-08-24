@@ -1,0 +1,3 @@
+[submodule "config/nvim-dots"]
+	path = config/nvim-dots
+	url = git@github.com:Qaaxaap/nvim-dots.git
