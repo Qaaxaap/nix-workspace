@@ -23,6 +23,8 @@
     htop
     direnv # 需自己在 .zshrc 加: eval "$(direnv hook zsh)"
     nvchecker  s-tui  scour  opencc
+    pnpm
+    cargo
 
     # 按需取消注释
     # eza
