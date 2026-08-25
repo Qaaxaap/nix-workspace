@@ -26,6 +26,9 @@ in
     xdg.configFile = {
       "nvim".source = link "${config.home.homeDirectory}/nix/config/nvim-dots";
     };
+    home.file = {
+      ".zshrc".source = link "${config.home.homeDirectory}/nix/config/zshrc";
+    };
     xdg.dataFile = {
       "icons/hicolor/512x512/apps/logseq.png".source = "${pkgs.logseq}/share/icons/hicolor/512x512/apps/logseq.png";
       "icons/hicolor/index.theme".source = "${pkgs.hicolor-icon-theme}/share/icons/hicolor/index.theme";
