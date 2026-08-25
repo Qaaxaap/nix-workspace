@@ -1,3 +1,15 @@
 [submodule "config/nvim-dots"]
 	path = config/nvim-dots
 	url = git@github.com:Qaaxaap/nvim-dots.git
+[submodule "config/oh-my-zsh"]
+	path = config/oh-my-zsh
+	url = https://github.com/ohmyzsh/ohmyzsh.git
+[submodule "config/custom/plugins/zsh-autosuggestions"]
+	path = config/custom/plugins/zsh-autosuggestions
+	url = https://github.com/zsh-users/zsh-autosuggestions
+[submodule "config/custom/themes/powerlevel10k"]
+	path = config/custom/themes/powerlevel10k
+	url = https://github.com/romkatv/powerlevel10k.git
+[submodule "config/custom/plugins/zsh-syntax-highlighting"]
+	path = config/custom/plugins/zsh-syntax-highlighting
+	url = https://github.com/zsh-users/zsh-syntax-highlighting.git

@@ -78,6 +78,7 @@ ZSH_THEME="powerlevel10k/powerlevel10k"
 # Example format: plugins=(rails git textmate ruby lighthouse)
 # Add wisely, as too many plugins slow down shell startup.
 plugins=(git z zsh-autosuggestions zsh-syntax-highlighting sudo)
+export ZSH_CUSTOM="$(readlink -f "$ZSH/../custom")"
 
 source $ZSH/oh-my-zsh.sh
 
@@ -127,6 +128,7 @@ export PATH="$HOME/bin:$PATH"
 
 path=(/bin ${path:#/bin})
 export PATH
+
 
 source ~/.deepseekrc
 alias python3="$HOME/.nix-profile/bin/python3"

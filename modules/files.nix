@@ -28,6 +28,8 @@ in
     };
     home.file = {
       ".zshrc".source = link "${config.home.homeDirectory}/nix/config/zshrc";
+      ".p10k.zsh".source = link "${config.home.homeDirectory}/nix/config/p10k.zsh";
+      ".oh-my-zsh".source = link "${config.home.homeDirectory}/nix/config/oh-my-zsh";
     };
     xdg.dataFile = {
       "icons/hicolor/512x512/apps/logseq.png".source = "${pkgs.logseq}/share/icons/hicolor/512x512/apps/logseq.png";
