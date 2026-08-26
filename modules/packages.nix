@@ -25,6 +25,9 @@
     nvchecker  s-tui  scour  opencc
     pnpm
     cargo
+    kitty
+
+    maple-mono.NF-CN
 
     # 按需取消注释
     # eza

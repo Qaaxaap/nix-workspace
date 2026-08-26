@@ -25,6 +25,7 @@ in
   # };
     xdg.configFile = {
       "nvim".source = link "${config.home.homeDirectory}/nix/config/nvim-dots";
+      "kitty".source = link "${config.home.homeDirectory}/nix/config/kitty";
     };
     home.file = {
       ".zshrc".source = link "${config.home.homeDirectory}/nix/config/zshrc";
