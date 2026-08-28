@@ -7,15 +7,14 @@
     #   nixpkgs.url = "github:nixos/nixpkgs/nixos-26.05";
     #   home-manager.url = "github:nix-community/home-manager/release-26.05";
     nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
-
+    nixGL = { url = "github:nix-community/nixGL"; inputs.nixpkgs.follows = "nixpkgs"; };
     home-manager = {
       url = "github:nix-community/home-manager";
       # Reuse our nixpkgs instead of home-manager's own copy.
       inputs.nixpkgs.follows = "nixpkgs";
     };
   };
-
-  outputs = { self, nixpkgs, home-manager, ... }:
+  outputs = { self, nixpkgs, home-manager, nixGL, ... }:
     let
       system = "x86_64-linux";
       pkgs = import nixpkgs {
@@ -38,6 +37,7 @@
       # `home-manager switch --flake ~/nix` cannot find it.
       homeConfigurations.Qaaxaap = home-manager.lib.homeManagerConfiguration {
         inherit pkgs;
+        extraSpecialArgs = { inherit nixGL; };
         modules = [
           ./home.nix
           ./modules/packages.nix

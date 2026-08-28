@@ -133,3 +133,5 @@ export PATH
 source ~/.deepseekrc
 alias python3="$HOME/.nix-profile/bin/python3"
 alias python="$HOME/.nix-profile/bin/python3"
+
+. "$HOME/.local/bin/env"

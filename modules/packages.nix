@@ -1,4 +1,4 @@
-{ config, pkgs, ... }:
+{ config, pkgs, nixGL, ... }:
 
 {
   # ============================================================
@@ -27,7 +27,8 @@
     cargo
     kitty
 
-    maple-mono.NF-CN
+    maple-mono.NF-CN-unhinted
+    nixGL.packages.x86_64-linux.nixGLIntel
 
     # 按需取消注释
     # eza
