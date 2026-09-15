@@ -43,6 +43,7 @@
           ./modules/packages.nix
           ./modules/shell.nix
           ./modules/files.nix
+          ./modules/x11.nix
         ];
       };
 

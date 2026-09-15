@@ -1,0 +1,10 @@
+! XWayland 应用的高 DPI 设置。
+!
+! 这块屏是 3072x1920 @ scale 2（逻辑 1536x960）。走 XWayland 的程序拿到的
+! X screen 是逻辑尺寸，默认按 1x 渲染，界面只有原生程序的一半大——腾讯会议
+! 就是典型（登录窗 189x335，改完 377x669）。
+!
+! Qt5 的 xcb 平台插件从 X 资源库读 Xft.dpi，配合 wemeet wrapper 里自带的
+! QT_AUTO_SCREEN_SCALE_FACTOR=1，就得到 96 * 2 = 192 的逻辑 DPI，即 2 倍缩放。
+! 由 systemd user 服务 xresources 在会话启动时 xrdb -merge 进来（见 modules/x11.nix）。
+Xft.dpi: 192
