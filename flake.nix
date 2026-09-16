@@ -13,8 +13,15 @@
       # Reuse our nixpkgs instead of home-manager's own copy.
       inputs.nixpkgs.follows = "nixpkgs";
     };
+    # omp (oh-my-pi) coding agent; it ships its own Home Manager module,
+    # wired up in modules/omp.nix.
+    omp = {
+      url = "github:can1357/oh-my-pi";
+      # Reuse our nixpkgs instead of oh-my-pi's own copy.
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
-  outputs = { self, nixpkgs, home-manager, nixGL, ... }:
+  outputs = { self, nixpkgs, home-manager, nixGL, omp, ... }:
     let
       system = "x86_64-linux";
       pkgs = import nixpkgs {
@@ -37,13 +44,14 @@
       # `home-manager switch --flake ~/nix` cannot find it.
       homeConfigurations.Qaaxaap = home-manager.lib.homeManagerConfiguration {
         inherit pkgs;
-        extraSpecialArgs = { inherit nixGL; };
+        extraSpecialArgs = { inherit nixGL omp; };
         modules = [
           ./home.nix
           ./modules/packages.nix
           ./modules/shell.nix
           ./modules/files.nix
           ./modules/x11.nix
+          ./modules/omp.nix
         ];
       };
 

@@ -32,6 +32,8 @@
 
 编辑 [`modules/packages.nix`](./modules/packages.nix)，在 `home.packages` 列表里加/删，然后构建切换。包会出现在 `~/.nix-profile/bin`。
 
+个别包由专用模块安装，不走这个列表：例如 `modules/omp.nix` 引入上游 oh-my-pi 自带的 Home Manager 模块来装 `omp`。
+
 回滚上次变更：`home-manager generations` 查看，`~/.nix-profile/bin/home-manager switch --generations <N>` 切换。
 
 ## 目录结构
@@ -42,6 +44,7 @@
 | `home.nix` | 入口：用户名、home 目录、`stateVersion` |
 | `modules/packages.nix` | **包列表（唯一数据源：HM 安装和 devShell 都从这里取）** |
 | `modules/shell.nix` | 预留：目前为空。 |
+| `modules/omp.nix` | omp（[oh-my-pi](https://github.com/can1357/oh-my-pi)）编码代理：引入上游 `homeManagerModules` 并启用 |
 
 ## 切到稳定版
 
