@@ -87,6 +87,10 @@ export ZSH="$HOME/.oh-my-zsh"
 plugins=(git z zsh-autosuggestions zsh-syntax-highlighting sudo)
 export ZSH_CUSTOM="$(readlink -f "$ZSH/../custom")"
 
+# omp 补全：_omp 由 HM 从 `omp completions zsh` 生成（见 modules/omp.nix）。
+# 必须在下面 oh-my-zsh 执行 compinit 之前进 fpath，否则 Tab 不认识 omp 的子命令/flag。
+fpath=($HOME/.zsh/completions $fpath)
+
 source $ZSH/oh-my-zsh.sh
 
 # User configuration
