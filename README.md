@@ -47,7 +47,46 @@
 | `modules/packages.nix` | **包列表（唯一数据源：HM 安装和 devShell 都从这里取）** |
 | `modules/shell.nix` | 预留：目前为空。 |
 | `modules/omp.nix` | omp（[oh-my-pi](https://github.com/can1357/oh-my-pi)）编码代理：引入上游 `homeManagerModules` 并启用 |
-| `pkgs/plainva.nix` | Plainva 的本地 derivation（上游无 flake；nixpkgs 也没有该包），由 `modules/packages.nix` `callPackage` |
+| `pkgs/plainva.nix` | Plainva 的本地 derivation（上游无 flake；nixpkgs 也没有该包），经 `flake.nix` 的 `packages` / `overlays` 暴露 |
+
+## 别人怎么用这个 flake
+
+仓库里本地打包的包（目前是 `pkgs/plainva.nix`）通过 flake output 暴露出来了，可以单独复用，不必整套配置照搬：
+
+- 直接构建／运行：
+
+  ```bash
+  nix run github:Qaaxaap/nix-workspace#plainva    # 构建并启动
+  nix build github:Qaaxaap/nix-workspace#plainva  # 只要 result/bin/plainva-desktop
+  ```
+
+- 在自己的 flake 里当 overlay 用（NixOS / Home Manager 同理）：
+
+  ```nix
+  inputs.nix-workspace = {
+    url = "github:Qaaxaap/nix-workspace";
+    # 让两边共用同一份 nixpkgs，避免出现两套依赖
+    inputs.nixpkgs.follows = "nixpkgs";
+  };
+  ```
+
+  ```nix
+  { nix-workspace, pkgs, ... }:
+  {
+    nixpkgs.overlays = [ nix-workspace.overlays.default ];
+    environment.systemPackages = [ pkgs.plainva ];   # Home Manager 则用 home.packages
+  }
+  ```
+
+  或者不用 overlay，直接引用 output：
+
+  ```nix
+  home.packages = [ nix-workspace.packages.${pkgs.stdenv.hostPlatform.system}.plainva ];
+  ```
+
+- 只想要那一个包、不想连带求值本仓库其它 input（`nix-workspace` 会连带求值 home-manager / nixGL / omp 这些 input）：把 [`pkgs/plainva.nix`](./pkgs/plainva.nix) 抄进自己仓库，然后 `pkgs.callPackage ./plainva.nix { }` —— 它只用 nixpkgs。
+
+当前只声明 `x86_64-linux`（上游 Linux 端依赖 WebKitGTK ≥ 2.40）。
 
 ## 切到稳定版
 

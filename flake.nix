@@ -35,6 +35,11 @@
           # allowUnfree = true;
         };
       };
+
+      # 仓库里本地打包的包（上游没有 flake、nixpkgs 也没有）。
+      # 定义一次，Home Manager 配置与下面暴露的 packages/overlays 共用同一个
+      # derivation。
+      plainva = pkgs.callPackage ./pkgs/plainva.nix { };
     in {
       # `nix fmt` support
       formatter.${system} = pkgs.nixfmt;
@@ -44,7 +49,7 @@
       # `home-manager switch --flake ~/nix` cannot find it.
       homeConfigurations.Qaaxaap = home-manager.lib.homeManagerConfiguration {
         inherit pkgs;
-        extraSpecialArgs = { inherit nixGL omp; };
+        extraSpecialArgs = { inherit nixGL omp plainva; };
         modules = [
           ./home.nix
           ./modules/packages.nix
@@ -60,6 +65,19 @@
         type = "app";
         program = "${home-manager.packages.${system}.default}/bin/home-manager";
         meta.description = "Home Manager CLI";
+      };
+
+      # 供外部复用（详见 README「别人怎么用这个 flake」）：
+      #   nix run github:Qaaxaap/nix-workspace#plainva
+      #   nix build github:Qaaxaap/nix-workspace#plainva
+      packages.${system} = {
+        inherit plainva;
+        default = plainva;
+      };
+
+      #   nixpkgs.overlays = [ nix-workspace.overlays.default ];
+      overlays.default = final: _: {
+        plainva = final.callPackage ./pkgs/plainva.nix { };
       };
 
       # Default dev shell: `nix develop ~/nix`.

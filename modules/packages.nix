@@ -1,4 +1,4 @@
-{ config, pkgs, nixGL, ... }:
+{ config, pkgs, nixGL, plainva, ... }:
 let
   nixGLIntel = nixGL.packages.${pkgs.stdenv.hostPlatform.system}.nixGLIntel;
   # 一个通用的"GL 包装器"：把任意 nix 程序变成免前缀的 GPU 版
@@ -22,8 +22,9 @@ in
     fzf
     logseq
     # Plainva（本地优先的 Markdown vault 编辑器）：上游没有 flake/nixpkgs 包，
-    # 由 pkgs/plainva.nix 从源码打包。
-    (callPackage ../pkgs/plainva.nix { })
+    # 由 pkgs/plainva.nix 从源码打包；flake 里定义成 `plainva` 传进来，
+    # 同时也通过 packages/overlays 暴露给外部复用。
+    plainva
 
     # 常用 CLI
     jq
