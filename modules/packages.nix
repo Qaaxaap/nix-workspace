@@ -21,6 +21,9 @@ in
     fd
     fzf
     logseq
+    # Plainva（本地优先的 Markdown vault 编辑器）：上游没有 flake/nixpkgs 包，
+    # 由 pkgs/plainva.nix 从源码打包。
+    (callPackage ../pkgs/plainva.nix { })
 
     # 常用 CLI
     jq

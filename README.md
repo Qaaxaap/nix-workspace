@@ -34,6 +34,8 @@
 
 个别包由专用模块安装，不走这个列表：例如 `modules/omp.nix` 引入上游 oh-my-pi 自带的 Home Manager 模块来装 `omp`。
 
+上游没有 flake / nixpkgs 包的软件，则用仓库内的本地 derivation 打包，再在列表里 `callPackage`：目前有 [`pkgs/plainva.nix`](./pkgs/plainva.nix)（Plainva Markdown 编辑器，走 nixpkgs 的 `cargo-tauri.hook` 从源码构建）。升级时改文件里的 `version` 与 `src` / `pnpmDeps` 两个 hash。
+
 回滚上次变更：`home-manager generations` 查看，`~/.nix-profile/bin/home-manager switch --generations <N>` 切换。
 
 ## 目录结构
@@ -45,6 +47,7 @@
 | `modules/packages.nix` | **包列表（唯一数据源：HM 安装和 devShell 都从这里取）** |
 | `modules/shell.nix` | 预留：目前为空。 |
 | `modules/omp.nix` | omp（[oh-my-pi](https://github.com/can1357/oh-my-pi)）编码代理：引入上游 `homeManagerModules` 并启用 |
+| `pkgs/plainva.nix` | Plainva 的本地 derivation（上游无 flake；nixpkgs 也没有该包），由 `modules/packages.nix` `callPackage` |
 
 ## 切到稳定版
 
