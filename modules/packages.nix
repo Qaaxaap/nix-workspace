@@ -1,4 +1,4 @@
-{ config, pkgs, nixGL, plainva, ... }:
+{ config, pkgs, nixGL, plainva, watch-skill, ... }:
 let
   nixGLIntel = nixGL.packages.${pkgs.stdenv.hostPlatform.system}.nixGLIntel;
   # 一个通用的"GL 包装器"：把任意 nix 程序变成免前缀的 GPU 版
@@ -25,6 +25,11 @@ in
     # 由 pkgs/plainva.nix 从源码打包；flake 里定义成 `plainva` 传进来，
     # 同时也通过 packages/overlays 暴露给外部复用。
     plainva
+
+    # watch-skill：agent 的视频理解引擎（watch/ask/search → 带时间戳的证据）。
+    # 同样由 pkgs/watch-skill.nix 本地打包；ffmpeg / yt-dlp / deno 已由该包
+    # 通过 wrapProgram 注入 PATH，无需在这里重复列出。
+    watch-skill
 
     # 常用 CLI
     jq

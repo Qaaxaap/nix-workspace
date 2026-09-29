@@ -40,6 +40,11 @@
       # 定义一次，Home Manager 配置与下面暴露的 packages/overlays 共用同一个
       # derivation。
       plainva = pkgs.callPackage ./pkgs/plainva.nix { };
+
+      # watch-skill —— agent 的视频理解引擎（CLI + MCP server）。
+      # nixpkgs 里没有本体，但它的全部 Python 依赖 nixpkgs 都有，
+      # 所以只需打包本体（详见 pkgs/watch-skill.nix 的注释）。
+      watch-skill = pkgs.callPackage ./pkgs/watch-skill.nix { };
     in {
       # `nix fmt` support
       formatter.${system} = pkgs.nixfmt;
@@ -49,7 +54,7 @@
       # `home-manager switch --flake ~/nix` cannot find it.
       homeConfigurations.Qaaxaap = home-manager.lib.homeManagerConfiguration {
         inherit pkgs;
-        extraSpecialArgs = { inherit nixGL omp plainva; };
+        extraSpecialArgs = { inherit nixGL omp plainva watch-skill; };
         modules = [
           ./home.nix
           ./modules/packages.nix
@@ -71,13 +76,14 @@
       #   nix run github:Qaaxaap/nix-workspace#plainva
       #   nix build github:Qaaxaap/nix-workspace#plainva
       packages.${system} = {
-        inherit plainva;
+        inherit plainva watch-skill;
         default = plainva;
       };
 
       #   nixpkgs.overlays = [ nix-workspace.overlays.default ];
       overlays.default = final: _: {
         plainva = final.callPackage ./pkgs/plainva.nix { };
+        watch-skill = final.callPackage ./pkgs/watch-skill.nix { };
       };
 
       # Default dev shell: `nix develop ~/nix`.
