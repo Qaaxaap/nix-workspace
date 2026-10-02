@@ -29,6 +29,8 @@ in
     };
     home.file = {
       ".zshrc".source = link "${config.home.homeDirectory}/nix/config/zshrc";
+      # 环境变量单一来源：交互 zsh 与 dsh 的 zsh 工具都 source 它。
+      ".zsh-env".source = link "${config.home.homeDirectory}/nix/config/zsh-env";
       ".p10k.zsh".source = link "${config.home.homeDirectory}/nix/config/p10k.zsh";
       ".oh-my-zsh".source = link "${config.home.homeDirectory}/nix/config/oh-my-zsh";
       # XWayland 应用的 Xft.dpi；由 systemd user 服务 xresources 加载（modules/x11.nix）。

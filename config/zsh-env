@@ -1,0 +1,32 @@
+# zsh 环境变量：交互 shell 与 dsh 的 `zsh` 工具共用这一份。
+# 由 ~/.zshrc 与 dsh-tool-zsh 的 $ZDOTDIR/.zprofile 各自 source。
+#
+# 只放环境。这里出现的任何输出都会混进工具结果；别名、提示符、插件加载、
+# ssh-agent、exec 这类交互式副作用留在 ~/.zshrc 里。
+export MAKEFLAGS="-j22"
+export CMAKE_BUILD_PARALLEL_LEVEL=22
+# Created by `pipx` on 2025-12-19 08:13:40
+#export PATH="$PATH:/home/Qaaxaap/.local/bin"
+#export ALL_PROXY=http://127.0.0.1:7890
+# omp browser tool: Chromium ignores ALL_PROXY, so point it at the local proxy explicitly
+export PUPPETEER_PROXY=http://127.0.0.1:7890
+export PATH="$HOME/bin:$PATH"
+
+path=(/bin ${path:#/bin})
+export PATH
+
+source ~/.deepseekrc
+
+. "$HOME/.local/bin/env"
+
+# === watch-skill 视觉后端（4070S 上的 Qwen2.5-VL）BEGIN ===
+# 说明：watch-skill 只读「当前工作目录」的 .env，故放到全局环境变量，
+# 这样在任意目录跑 watch/ask 都能用上远端 VLM。
+# 关掉：注释掉下面几行；换后端：改 BASE_URL / MODEL。
+export WATCHSKILL_VISION_CHEAP_PROVIDER=custom
+export WATCHSKILL_VISION_STRONG_PROVIDER=custom
+export WATCHSKILL_VISION_CHEAP_MODEL=qwen2.5vl
+export WATCHSKILL_VISION_STRONG_MODEL=qwen2.5vl
+export WATCHSKILL_CUSTOM_BASE_URL=http://192.168.1.122:8000/v1
+export WATCHSKILL_CUSTOM_API_KEY=dummy-local-no-auth
+# === watch-skill 视觉后端 END ===

@@ -129,21 +129,11 @@ if [ -z "$SSH_AUTH_SOCK" ] ; then
     eval "$(ssh-agent -s)" > /dev/null
     ssh-add ~/.ssh/id_ed25519 2> /dev/null
 fi
-export MAKEFLAGS="-j22"
-export CMAKE_BUILD_PARALLEL_LEVEL=22
+# 环境变量抽到 ~/.zsh-env（由 Home Manager 以 out-of-store 链接提供），
+# 交互 shell 与 dsh 的 zsh 工具共用同一份。
+source ~/.zsh-env
 
-# Created by `pipx` on 2025-12-19 08:13:40
-#export PATH="$PATH:/home/Qaaxaap/.local/bin"
-#export ALL_PROXY=http://127.0.0.1:7890
-export PATH="$HOME/bin:$PATH"
-
-path=(/bin ${path:#/bin})
-export PATH
-
-
-source ~/.deepseekrc
 alias python3="$HOME/.nix-profile/bin/python3"
 alias python="$HOME/.nix-profile/bin/python3"
 
-. "$HOME/.local/bin/env"
 [[ -z "$P11K_ENGINE" ]] && exec /home/Qaaxaap/Projects/powerlevel11k/target/debug/p11k
