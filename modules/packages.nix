@@ -38,7 +38,15 @@ in
     direnv # 需自己在 .zshrc 加: eval "$(direnv hook zsh)"
     nvchecker  s-tui  scour  opencc
     pnpm
+
+    # Rust 工具链。四者都取自同一份 nixpkgs，版本必然一致（当前 1.98.1）：
+    # cargo-fmt 由 rustfmt 提供，cargo-clippy / clippy-driver 由 clippy 提供，
+    # rustc 自带 rustdoc / rust-gdb / rust-lldb。
+    rustc
     cargo
+    rustfmt
+    clippy
+
     (glWrap kitty)
     neovim
 
