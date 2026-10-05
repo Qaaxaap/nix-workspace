@@ -1,0 +1,15 @@
+{
+  // 由 nix 用 mkOutOfStoreSymlink 链接到 ~/.config/VSCodium/User/settings.json，
+  // 在 UI 里改设置会直接写回这个文件（见 config/vsc-dots/README.md）。
+  "editor.fontFamily": "'Maple Mono NF CN','Droid Sans Mono', monospace",
+
+  // 扩展由 nix 提供（--extensions-dir 指向只读的 store 目录），
+  // 关掉自动更新/检查，免得每次启动都报写不进去。
+  "extensions.autoCheckUpdates": false,
+  "extensions.autoUpdate": false,
+
+  // 编辑器本体由 nix/pacman 升级，不用它自己检查更新。
+  "update.mode": "none",
+
+  "telemetry.telemetryLevel": "off"
+}

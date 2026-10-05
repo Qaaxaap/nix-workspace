@@ -1,4 +1,4 @@
-{ config, pkgs, nixGL, plainva, watch-skill, vscodium-electron, ... }:
+{ config, pkgs, nixGL, plainva, watch-skill, vscodium-electron-ext, ... }:
 let
   nixGLIntel = nixGL.packages.${pkgs.stdenv.hostPlatform.system}.nixGLIntel;
   # 一个通用的"GL 包装器"：把任意 nix 程序变成免前缀的 GPU 版
@@ -53,10 +53,10 @@ in
       extensions = [ "rust-src" "rustfmt" "clippy" ];
     })
 
-    # VSCodium：官方 RPM + nixpkgs 的 electron_42，不随包再带一份 electron。
-    # 打包思路同 AUR 的 vscodium-electron-bin，配置目录也是
-    # ~/.config/vscodium-electron，和 pacman 那个可以对换。
-    vscodium-electron
+    # VSCodium：编辑器本体是官方 RPM + nixpkgs 的 electron（pkgs/vscodium-electron.nix），
+    # 扩展来自 config/vsc-dots（open-vsx 上逐个固定版本，经 --extensions-dir 注入），
+    # 配置也由那份 vsc-dots 用符号链接管理。
+    vscodium-electron-ext
 
     (glWrap kitty)
     neovim

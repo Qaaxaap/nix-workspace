@@ -26,6 +26,11 @@ in
     xdg.configFile = {
       "nvim".source = link "${config.home.homeDirectory}/nix/config/nvim-dots";
       "kitty".source = link "${config.home.homeDirectory}/nix/config/kitty";
+      # vsc-dots：VSCodium 的设置与快捷键（扩展清单在同目录，由 flake 构建）。
+      # 只链接这两个文件：User/ 下还有 globalStorage、workspaceStorage、
+      # History 等运行时数据，不能整个目录接管。
+      "VSCodium/User/settings.json".source = link "${config.home.homeDirectory}/nix/config/vsc-dots/User/settings.json";
+      "VSCodium/User/keybindings.json".source = link "${config.home.homeDirectory}/nix/config/vsc-dots/User/keybindings.json";
     };
     home.file = {
       ".zshrc".source = link "${config.home.homeDirectory}/nix/config/zshrc";

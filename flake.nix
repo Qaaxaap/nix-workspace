@@ -58,6 +58,15 @@
       # vscodium-electron —— 官方 RPM + nixpkgs 的 electron，不随包再带一份
       # electron；打包思路同 AUR 的 vscodium-electron-bin（见 pkgs 下注释）。
       vscodium-electron = pkgs.callPackage ./pkgs/vscodium-electron.nix { };
+
+      # vsc-dots —— VSCodium 的配置与扩展清单，见 config/vsc-dots/README.md。
+      # 扩展从 open-vsx 取、逐个固定版本与哈希，再由 with-extensions.nix
+      # 用 --extensions-dir 绑到上面的编辑器上。
+      vscExtensions = pkgs.callPackage ./config/vsc-dots/extensions.nix { };
+      vscodium-electron-ext = pkgs.callPackage ./config/vsc-dots/with-extensions.nix {
+        inherit vscodium-electron;
+        extensions = vscExtensions;
+      };
     in {
       # `nix fmt` support
       formatter.${system} = pkgs.nixfmt;
@@ -67,7 +76,16 @@
       # `home-manager switch --flake ~/nix` cannot find it.
       homeConfigurations.Qaaxaap = home-manager.lib.homeManagerConfiguration {
         inherit pkgs;
-        extraSpecialArgs = { inherit nixGL omp plainva watch-skill vscodium-electron; };
+        extraSpecialArgs = {
+          inherit
+            nixGL
+            omp
+            plainva
+            watch-skill
+            vscodium-electron
+            vscodium-electron-ext
+            ;
+        };
         modules = [
           ./home.nix
           ./modules/packages.nix
@@ -89,7 +107,7 @@
       #   nix run github:Qaaxaap/nix-workspace#plainva
       #   nix build github:Qaaxaap/nix-workspace#plainva
       packages.${system} = {
-        inherit plainva watch-skill vscodium-electron;
+        inherit plainva watch-skill vscodium-electron vscodium-electron-ext;
         default = plainva;
       };
 
