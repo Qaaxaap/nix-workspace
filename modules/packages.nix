@@ -39,13 +39,19 @@ in
     nvchecker  s-tui  scour  opencc
     pnpm
 
-    # Rust 工具链。四者都取自同一份 nixpkgs，版本必然一致（当前 1.98.1）：
+    # Rust 工具链。改用 rust-overlay 的官方 toolchain（flake.nix 里加的
+    # overlay），四件套依然同源。关键是多装 rust-src 组件：nixpkgs 的
+    # rustc 不含标准库源码，rust-analyzer 会报
+    # "can't load standard library, try installing rust-src"。
+    # rust-src 落在 toolchain 的 lib/rustlib/src/rust，rust-analyzer 从
+    # sysroot 自己就能找到，不必再设 RUST_SRC_PATH。
+    # 用 minimal 而不是 default：default profile 会连 rust-docs 一起装，
+    # 白占 706 MiB；rustfmt / clippy 单独列进 extensions 即可。
     # cargo-fmt 由 rustfmt 提供，cargo-clippy / clippy-driver 由 clippy 提供，
     # rustc 自带 rustdoc / rust-gdb / rust-lldb。
-    rustc
-    cargo
-    rustfmt
-    clippy
+    (rust-bin.stable."1.98.1".minimal.override {
+      extensions = [ "rust-src" "rustfmt" "clippy" ];
+    })
 
     (glWrap kitty)
     neovim

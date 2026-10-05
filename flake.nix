@@ -20,12 +20,21 @@
       # Reuse our nixpkgs instead of oh-my-pi's own copy.
       inputs.nixpkgs.follows = "nixpkgs";
     };
+    # Rust 官方 toolchain。用来替掉 nixpkgs 的 rustc/cargo/rustfmt/clippy，
+    # 因为 nixpkgs 的 rustc 不带 rust-src 组件，rust-analyzer 会报
+    # "can't load standard library, try installing rust-src"。
+    rust-overlay = {
+      url = "github:oxalica/rust-overlay";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
-  outputs = { self, nixpkgs, home-manager, nixGL, omp, ... }:
+  outputs = { self, nixpkgs, home-manager, nixGL, omp, rust-overlay, ... }:
     let
       system = "x86_64-linux";
       pkgs = import nixpkgs {
         inherit system;
+        # 提供 rust-bin.*，用于 modules/packages.nix 里的 Rust toolchain。
+        overlays = [ rust-overlay.overlays.default ];
         config = {
           # Logseq 依赖的 electron 39 已 EOL，nixpkgs 将其标记为
           # insecure；必须在此显式放行，否则求值直接失败。
