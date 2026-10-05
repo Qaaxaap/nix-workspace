@@ -54,6 +54,10 @@
       # nixpkgs 里没有本体，但它的全部 Python 依赖 nixpkgs 都有，
       # 所以只需打包本体（详见 pkgs/watch-skill.nix 的注释）。
       watch-skill = pkgs.callPackage ./pkgs/watch-skill.nix { };
+
+      # vscodium-electron —— 官方 RPM + nixpkgs 的 electron，不随包再带一份
+      # electron；打包思路同 AUR 的 vscodium-electron-bin（见 pkgs 下注释）。
+      vscodium-electron = pkgs.callPackage ./pkgs/vscodium-electron.nix { };
     in {
       # `nix fmt` support
       formatter.${system} = pkgs.nixfmt;
@@ -63,7 +67,7 @@
       # `home-manager switch --flake ~/nix` cannot find it.
       homeConfigurations.Qaaxaap = home-manager.lib.homeManagerConfiguration {
         inherit pkgs;
-        extraSpecialArgs = { inherit nixGL omp plainva watch-skill; };
+        extraSpecialArgs = { inherit nixGL omp plainva watch-skill vscodium-electron; };
         modules = [
           ./home.nix
           ./modules/packages.nix
@@ -85,7 +89,7 @@
       #   nix run github:Qaaxaap/nix-workspace#plainva
       #   nix build github:Qaaxaap/nix-workspace#plainva
       packages.${system} = {
-        inherit plainva watch-skill;
+        inherit plainva watch-skill vscodium-electron;
         default = plainva;
       };
 
@@ -93,6 +97,7 @@
       overlays.default = final: _: {
         plainva = final.callPackage ./pkgs/plainva.nix { };
         watch-skill = final.callPackage ./pkgs/watch-skill.nix { };
+        vscodium-electron = final.callPackage ./pkgs/vscodium-electron.nix { };
       };
 
       # Default dev shell: `nix develop ~/nix`.
