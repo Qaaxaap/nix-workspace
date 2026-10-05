@@ -33,13 +33,13 @@
 
 rustPlatform.buildRustPackage (finalAttrs: {
   pname = "plainva";
-  version = "0.8.3";
+  version = "0.8.4";
 
   src = fetchFromGitHub {
     owner = "plainva";
     repo = "plainva";
     tag = "v${finalAttrs.version}";
-    hash = "sha256-6Zi1DaV0ncxzziS6j22ncLf7I5g8yxF6a7BIIEcowzs=";
+    hash = "sha256-50ZZQN/Avg0sRI/jI4wx2zHJ4Zj2bO/HHZ1ebRp4iVk=";
   };
 
   # Tauri 应用体在 monorepo 的子目录里，cargo 与 tauri 都从那里跑。
@@ -54,7 +54,7 @@ rustPlatform.buildRustPackage (finalAttrs: {
     inherit (finalAttrs) pname version src;
     pnpm = pnpm_10;
     fetcherVersion = 4;
-    hash = "sha256-7GGmmdFynWXrRGGri8KmJetEJ9vtY8Mmw2d7SP64O0U=";
+    hash = "sha256-xEt1KkozO67yzBJXPlEk81wHglR7hdLmifYd6ky2gkw=";
   };
 
   nativeBuildInputs = [
