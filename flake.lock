@@ -371,11 +371,11 @@
     },
     "vscode-dots": {
       "locked": {
-        "lastModified": 1791214962,
-        "narHash": "sha256-NqsGkmxHfnbzP/4IU4O4ECBNCnNasASZjlnHA++Vzh8=",
+        "lastModified": 1791215767,
+        "narHash": "sha256-3ZslXxmi7hUgIo8/6wBtHOVZtoJ1gOheiaO+kUWsyKk=",
         "owner": "Qaaxaap",
         "repo": "vscode-dots",
-        "rev": "0fdf1f6a8efc5a8b9d2ba7f7f3299a6bc5cd14cf",
+        "rev": "19c33801468d9bba4c9d1ce5d60f9bbbed919c7e",
         "type": "github"
       },
       "original": {
