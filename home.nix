@@ -13,6 +13,10 @@
   xdg.enable=true;
   xdg.mime.enable=true;
   targets.genericLinux.enable=true;
+
+  # GUI 会话（systemd user）不会自动带上 nix profile 的 bin，
+  # 桌面启动的 VSCodium 就找不到 nvim（vscode-neovim 需要它）。
+  home.sessionPath = [ "$HOME/.nix-profile/bin" ];
   # 少量"顺手"的包也可以直接加在这里：
   # home.packages = [ pkgs.xxx ];
 }
