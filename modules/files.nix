@@ -33,6 +33,10 @@ in
       # History 等运行时数据，不能整个目录接管。
       "VSCodium/User/settings.json".source = link "${config.home.homeDirectory}/Projects/vscode-dots/User/settings.json";
       "VSCodium/User/keybindings.json".source = link "${config.home.homeDirectory}/Projects/vscode-dots/User/keybindings.json";
+      # vscode-neovim 专用的 nvim 配置。settings 里设了
+      # "vscode-neovim.NVIM_APPNAME": "vscodium"，nvim 就会读这里的 init.lua，
+      # 不去动 ~/.config/nvim（LazyVim）。
+      "vscodium/init.lua".source = link "${config.home.homeDirectory}/Projects/vscode-dots/nvim/init.lua";
     };
     home.file = {
       ".zshrc".source = link "${config.home.homeDirectory}/nix/config/zshrc";
