@@ -26,11 +26,13 @@ in
     xdg.configFile = {
       "nvim".source = link "${config.home.homeDirectory}/nix/config/nvim-dots";
       "kitty".source = link "${config.home.homeDirectory}/nix/config/kitty";
-      # vsc-dots：VSCodium 的设置与快捷键（扩展清单在同目录，由 flake 构建）。
+      # vscode-dots：VSCodium 的设置与快捷键。仓库在 ~/Projects/vscode-dots
+      # （远程 github:Qaaxaap/vscode-dots），这里链本地工作副本而不是 flake
+      # input 的 store 副本，UI 里改设置才会直接写回仓库。
       # 只链接这两个文件：User/ 下还有 globalStorage、workspaceStorage、
       # History 等运行时数据，不能整个目录接管。
-      "VSCodium/User/settings.json".source = link "${config.home.homeDirectory}/nix/config/vsc-dots/User/settings.json";
-      "VSCodium/User/keybindings.json".source = link "${config.home.homeDirectory}/nix/config/vsc-dots/User/keybindings.json";
+      "VSCodium/User/settings.json".source = link "${config.home.homeDirectory}/Projects/vscode-dots/User/settings.json";
+      "VSCodium/User/keybindings.json".source = link "${config.home.homeDirectory}/Projects/vscode-dots/User/keybindings.json";
     };
     home.file = {
       ".zshrc".source = link "${config.home.homeDirectory}/nix/config/zshrc";
@@ -42,7 +44,6 @@ in
       ".Xresources".source = link "${config.home.homeDirectory}/nix/config/Xresources";
     };
     xdg.dataFile = {
-      "icons/hicolor/512x512/apps/logseq.png".source = "${pkgs.logseq}/share/icons/hicolor/512x512/apps/logseq.png";
       "icons/hicolor/index.theme".source = "${pkgs.hicolor-icon-theme}/share/icons/hicolor/index.theme";
     };
 }

@@ -27,8 +27,11 @@
       url = "github:oxalica/rust-overlay";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+    # VSCodium 的设置、快捷键与扩展清单，独立仓库
+    # （本地工作副本在 ~/Projects/vscode-dots，配置由 modules/files.nix 链过去）。
+    vscode-dots.url = "github:Qaaxaap/vscode-dots";
   };
-  outputs = { self, nixpkgs, home-manager, nixGL, omp, rust-overlay, ... }:
+  outputs = { self, nixpkgs, home-manager, nixGL, omp, rust-overlay, vscode-dots, ... }:
     let
       system = "x86_64-linux";
       pkgs = import nixpkgs {
@@ -36,10 +39,6 @@
         # 提供 rust-bin.*，用于 modules/packages.nix 里的 Rust toolchain。
         overlays = [ rust-overlay.overlays.default ];
         config = {
-          # Logseq 依赖的 electron 39 已 EOL，nixpkgs 将其标记为
-          # insecure；必须在此显式放行，否则求值直接失败。
-          permittedInsecurePackages = [ "electron-39.8.10" ];
-
           # 将来需要非自由包时取消注释:
           # allowUnfree = true;
         };
@@ -59,13 +58,11 @@
       # electron；打包思路同 AUR 的 vscodium-electron-bin（见 pkgs 下注释）。
       vscodium-electron = pkgs.callPackage ./pkgs/vscodium-electron.nix { };
 
-      # vsc-dots —— VSCodium 的配置与扩展清单，见 config/vsc-dots/README.md。
-      # 扩展从 open-vsx 取、逐个固定版本与哈希，再由 with-extensions.nix
-      # 用 --extensions-dir 绑到上面的编辑器上。
-      vscExtensions = pkgs.callPackage ./config/vsc-dots/extensions.nix { };
-      vscodium-electron-ext = pkgs.callPackage ./config/vsc-dots/with-extensions.nix {
-        inherit vscodium-electron;
-        extensions = vscExtensions;
+      # vscode-dots —— VSCodium 的设置、快捷键与扩展清单，独立仓库
+      # github:Qaaxaap/vscode-dots。扩展在那边取自 open-vsx 并固定版本与哈希；
+      # 这里把 pkgs 与编辑器传进去，拿回加了 --extensions-dir 的版本。
+      vscodium-electron-ext = vscode-dots.lib.withExtensions {
+        inherit pkgs vscodium-electron;
       };
     in {
       # `nix fmt` support

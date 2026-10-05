@@ -235,7 +235,8 @@
         "nixGL": "nixGL",
         "nixpkgs": "nixpkgs",
         "omp": "omp",
-        "rust-overlay": "rust-overlay_2"
+        "rust-overlay": "rust-overlay_2",
+        "vscode-dots": "vscode-dots"
       }
     },
     "rust-overlay": {
@@ -365,6 +366,21 @@
       "original": {
         "owner": "numtide",
         "repo": "treefmt-nix",
+        "type": "github"
+      }
+    },
+    "vscode-dots": {
+      "locked": {
+        "lastModified": 1791212678,
+        "narHash": "sha256-oDq1D6yIDl0nFULeQEvreV4kXtUmD1h8akTG51mIFRA=",
+        "owner": "Qaaxaap",
+        "repo": "vscode-dots",
+        "rev": "ceb11edb706c6551b7f4584facffea3a852bd1ef",
+        "type": "github"
+      },
+      "original": {
+        "owner": "Qaaxaap",
+        "repo": "vscode-dots",
         "type": "github"
       }
     }

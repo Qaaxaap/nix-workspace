@@ -20,7 +20,6 @@ in
     ripgrep
     fd
     fzf
-    logseq
     # Plainva（本地优先的 Markdown vault 编辑器）：上游没有 flake/nixpkgs 包，
     # 由 pkgs/plainva.nix 从源码打包；flake 里定义成 `plainva` 传进来，
     # 同时也通过 packages/overlays 暴露给外部复用。
