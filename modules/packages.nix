@@ -76,7 +76,12 @@ in
         torchvision
         numpy  scipy  pandas  matplotlib  scikit-learn  scikit-image  networkx
         jupyterlab
-        beartype # pacman 侧的 python-beartype 更新被 check 卡住，nix 这份独立提供
+        # 以下对应 pacman 侧的 python-* 显式包，系统那份将逐步卸掉，
+        # 卸载前先在这里补齐，保证功能不缺。beartype 还额外解决
+        # python-beartype 更新被 check 卡住的问题。
+        beartype  xarray  opencv4  onnxruntime  ctranslate2  pymupdf  rawpy
+        markdown  safetensors  huggingface-hub  mkdocs-material  py-key-value-aio
+        pytest  pytest-asyncio
       ]
     ))
   ];
