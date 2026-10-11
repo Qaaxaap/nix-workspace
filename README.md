@@ -34,7 +34,14 @@
 
 个别包由专用模块安装，不走这个列表：例如 `modules/omp.nix` 引入上游 oh-my-pi 自带的 Home Manager 模块来装 `omp`。
 
-上游没有 flake / nixpkgs 包的软件，则用仓库内的本地 derivation 打包，再在列表里 `callPackage`：目前有 [`pkgs/plainva.nix`](./pkgs/plainva.nix)（Plainva Markdown 编辑器，走 nixpkgs 的 `cargo-tauri.hook` 从源码构建）。升级时改文件里的 `version` 与 `src` / `pnpmDeps` 两个 hash。
+上游没有 flake / nixpkgs 包的软件，则用仓库内的本地 derivation 打包，再在列表里 `callPackage`：目前有 [`pkgs/plainva-bin.nix`](./pkgs/plainva-bin.nix)（Plainva Markdown 编辑器，解包上游 release 页的 `.deb`，不编译）。升级时 `version` 与 `hash` 一起改：
+
+```bash
+nix store prefetch-file --json --hash-type sha256 \
+  https://github.com/plainva/plainva/releases/download/vX.Y.Z/Plainva_X.Y.Z_amd64.deb
+```
+
+同目录的 [`pkgs/plainva.nix`](./pkgs/plainva.nix) 是同一个软件的源码构建版（`cargo-tauri.hook` + pnpm，一次构建几十分钟），只在需要本地补丁时用，在 flake 里暴露为 `plainva-src`；升级时改 `version` 与 `src` / `pnpmDeps` 两个 hash。
 
 回滚上次变更：`home-manager generations` 查看，`~/.nix-profile/bin/home-manager switch --generations <N>` 切换。
 
@@ -47,11 +54,12 @@
 | `modules/packages.nix` | **包列表（唯一数据源：HM 安装和 devShell 都从这里取）** |
 | `modules/shell.nix` | 预留：目前为空。 |
 | `modules/omp.nix` | omp（[oh-my-pi](https://github.com/can1357/oh-my-pi)）编码代理：引入上游 `homeManagerModules` 并启用 |
-| `pkgs/plainva.nix` | Plainva 的本地 derivation（上游无 flake；nixpkgs 也没有该包），经 `flake.nix` 的 `packages` / `overlays` 暴露 |
+| `pkgs/plainva-bin.nix` | Plainva 的本地 derivation（解包上游 release 的 `.deb`），即 `flake.nix` 里的 `plainva`；经 `packages` / `overlays` 暴露 |
+| `pkgs/plainva.nix` | 同一软件的源码构建版，即 `flake.nix` 里的 `plainva-src`（上游无 flake；nixpkgs 也没有该包） |
 
 ## 别人怎么用这个 flake
 
-仓库里本地打包的包（目前是 `pkgs/plainva.nix`）通过 flake output 暴露出来了，可以单独复用，不必整套配置照搬：
+仓库里本地打包的包（`plainva` / `plainva-src`）通过 flake output 暴露出来了，可以单独复用，不必整套配置照搬：
 
 - 直接构建／运行：
 
@@ -84,7 +92,7 @@
   home.packages = [ nix-workspace.packages.${pkgs.stdenv.hostPlatform.system}.plainva ];
   ```
 
-- 只想要那一个包、不想连带求值本仓库其它 input（`nix-workspace` 会连带求值 home-manager / nixGL / omp 这些 input）：把 [`pkgs/plainva.nix`](./pkgs/plainva.nix) 抄进自己仓库，然后 `pkgs.callPackage ./plainva.nix { }` —— 它只用 nixpkgs。
+- 只想要那一个包、不想连带求值本仓库其它 input（`nix-workspace` 会连带求值 home-manager / nixGL / omp 这些 input）：把 [`pkgs/plainva-bin.nix`](./pkgs/plainva-bin.nix) 抄进自己仓库，然后 `pkgs.callPackage ./plainva-bin.nix { }` —— 它只用 nixpkgs。
 
 当前只声明 `x86_64-linux`（上游 Linux 端依赖 WebKitGTK ≥ 2.40）。
 

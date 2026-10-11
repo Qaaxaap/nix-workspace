@@ -21,8 +21,9 @@ in
     fd
     fzf
     # Plainva（本地优先的 Markdown vault 编辑器）：上游没有 flake/nixpkgs 包，
-    # 由 pkgs/plainva.nix 从源码打包；flake 里定义成 `plainva` 传进来，
-    # 同时也通过 packages/overlays 暴露给外部复用。
+    # 装的是 pkgs/plainva-bin.nix，即解包官方 release 的 deb（不编译，rebuild 快）；
+    # flake 里定义成 `plainva` 传进来，同时也通过 packages/overlays 暴露给外部
+    # 复用。需要从源码构建时改用 flake 的 `plainva-src`。
     plainva
 
     # watch-skill：agent 的视频理解引擎（watch/ask/search → 带时间戳的证据）。

@@ -47,7 +47,12 @@
       # 仓库里本地打包的包（上游没有 flake、nixpkgs 也没有）。
       # 定义一次，Home Manager 配置与下面暴露的 packages/overlays 共用同一个
       # derivation。
-      plainva = pkgs.callPackage ./pkgs/plainva.nix { };
+      #
+      # Plainva 装的是二进制版（pkgs/plainva-bin.nix，解包上游 release 的 deb），
+      # 源码版（pkgs/plainva.nix，cargo + pnpm 全量构建）留作 plainva-src：
+      # 日常 rebuild 不该为它等一次 Rust 编译，需要本地补丁时再切过去。
+      plainva = pkgs.callPackage ./pkgs/plainva-bin.nix { };
+      plainva-src = pkgs.callPackage ./pkgs/plainva.nix { };
 
       # watch-skill —— agent 的视频理解引擎（CLI + MCP server）。
       # nixpkgs 里没有本体，但它的全部 Python 依赖 nixpkgs 都有，
@@ -110,13 +115,22 @@
       #   nix run github:Qaaxaap/nix-workspace#plainva
       #   nix build github:Qaaxaap/nix-workspace#plainva
       packages.${system} = {
-        inherit plainva watch-skill vscodium-electron vscodium-electron-ext d2l pywalfox;
+        inherit
+          plainva
+          plainva-src
+          watch-skill
+          vscodium-electron
+          vscodium-electron-ext
+          d2l
+          pywalfox
+          ;
         default = plainva;
       };
 
       #   nixpkgs.overlays = [ nix-workspace.overlays.default ];
       overlays.default = final: _: {
-        plainva = final.callPackage ./pkgs/plainva.nix { };
+        plainva = final.callPackage ./pkgs/plainva-bin.nix { };
+        plainva-src = final.callPackage ./pkgs/plainva.nix { };
         watch-skill = final.callPackage ./pkgs/watch-skill.nix { };
         vscodium-electron = final.callPackage ./pkgs/vscodium-electron.nix { };
         d2l = final.callPackage ./pkgs/d2l.nix { };
