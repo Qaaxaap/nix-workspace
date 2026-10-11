@@ -1,4 +1,4 @@
-{ config, pkgs, nixGL, plainva, watch-skill, vscodium-electron-ext, ... }:
+{ config, pkgs, nixGL, plainva, watch-skill, vscodium-electron-ext, d2l, pywalfox, ... }:
 let
   nixGLIntel = nixGL.packages.${pkgs.stdenv.hostPlatform.system}.nixGLIntel;
   # 一个通用的"GL 包装器"：把任意 nix 程序变成免前缀的 GPU 版
@@ -69,20 +69,26 @@ in
     # zoxide
     # tmux
     # du-dust
-    # Python
-    (python3.withPackages (
-      ps: with ps; [
-        torch
-        torchvision
-        numpy  scipy  pandas  matplotlib  scikit-learn  scikit-image  networkx
-        jupyterlab
-        # 以下对应 pacman 侧的 python-* 显式包，系统那份将逐步卸掉，
-        # 卸载前先在这里补齐，保证功能不缺。beartype 还额外解决
-        # python-beartype 更新被 check 卡住的问题。
-        beartype  xarray  opencv4  onnxruntime  ctranslate2  pymupdf  rawpy
-        markdown  safetensors  huggingface-hub  mkdocs-material  py-key-value-aio
-        pytest  pytest-asyncio
-      ]
-    ))
+    # Python。d2l 不在 nixpkgs 里（见 pkgs/d2l.nix），用 packageOverrides 注进
+    # 包集合，withPackages 才认得 ps.d2l。
+    ((python3.override {
+      packageOverrides = _: _: { inherit d2l; };
+    }).withPackages (ps: with ps; [
+      torch
+      torchvision
+      numpy  scipy  pandas  matplotlib  scikit-learn  scikit-image  networkx
+      jupyterlab
+      # 以下对应 pacman 侧的 python-* 显式包，系统那份将逐步卸掉，
+      # 卸载前先在这里补齐，保证功能不缺。beartype 还额外解决
+      # python-beartype 更新被 check 卡住的问题。
+      beartype  xarray  opencv4  onnxruntime  ctranslate2  pymupdf  rawpy
+      markdown  safetensors  huggingface-hub  mkdocs-material  py-key-value-aio
+      pytest  pytest-asyncio
+      d2l
+    ]))
+
+    # Pywalfox 扩展的 native host。本机那份清单现在指向 Noctalia，两者抢同一个
+    # host 名，要用这个包得先改清单（见 pkgs/pywalfox.nix 顶部注释）。
+    pywalfox
   ];
 }

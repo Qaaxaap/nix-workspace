@@ -64,6 +64,10 @@
       vscodium-electron-ext = vscode-dots.lib.withExtensions {
         inherit pkgs vscodium-electron;
       };
+
+      # d2l / pywalfox —— nixpkgs 里都没有，本地打包（见 pkgs 下各自注释）。
+      d2l = pkgs.callPackage ./pkgs/d2l.nix { };
+      pywalfox = pkgs.callPackage ./pkgs/pywalfox.nix { };
     in {
       # `nix fmt` support
       formatter.${system} = pkgs.nixfmt;
@@ -81,6 +85,8 @@
             watch-skill
             vscodium-electron
             vscodium-electron-ext
+            d2l
+            pywalfox
             ;
         };
         modules = [
@@ -104,7 +110,7 @@
       #   nix run github:Qaaxaap/nix-workspace#plainva
       #   nix build github:Qaaxaap/nix-workspace#plainva
       packages.${system} = {
-        inherit plainva watch-skill vscodium-electron vscodium-electron-ext;
+        inherit plainva watch-skill vscodium-electron vscodium-electron-ext d2l pywalfox;
         default = plainva;
       };
 
@@ -113,6 +119,8 @@
         plainva = final.callPackage ./pkgs/plainva.nix { };
         watch-skill = final.callPackage ./pkgs/watch-skill.nix { };
         vscodium-electron = final.callPackage ./pkgs/vscodium-electron.nix { };
+        d2l = final.callPackage ./pkgs/d2l.nix { };
+        pywalfox = final.callPackage ./pkgs/pywalfox.nix { };
       };
 
       # Default dev shell: `nix develop ~/nix`.
