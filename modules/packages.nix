@@ -76,6 +76,7 @@ in
         torchvision
         numpy  scipy  pandas  matplotlib  scikit-learn  scikit-image  networkx
         jupyterlab
+        beartype # pacman 侧的 python-beartype 更新被 check 卡住，nix 这份独立提供
       ]
     ))
   ];
