@@ -35,6 +35,23 @@
 
 let
   py = python314Packages;
+
+  # fastmcp 4.x 与 mcp v2 不兼容（mcp 2.3 把 McpError 改名为 MCPError），
+  # nixpkgs 在 fastmcp-slim 里以 `meta.broken = mcp.version >= 2` 标记这一点
+  # （当前 unstable 的 mcp 已是 2.3.0）。watch-skill 的 CLI 子命令不涉及 MCP
+  # 协议细节，去掉该标记并跳过 fastmcp-slim / fastmcp 的 installCheck 后
+  # 继续使用。MCP server 模式若在运行时报错，需等上游适配 mcp v2，或把
+  # mcp 钉回 1.x。
+  fastmcp = (py.fastmcp.override {
+    fastmcp-slim = py.fastmcp-slim.overrideAttrs (old: {
+      meta = old.meta // { broken = false; };
+      doCheck = false;
+      doInstallCheck = false;
+    });
+  }).overrideAttrs (old: {
+    doCheck = false;
+    doInstallCheck = false;
+  });
 in
 py.buildPythonApplication (finalAttrs: {
   pname = "watch-skill";
@@ -82,8 +99,8 @@ py.buildPythonApplication (finalAttrs: {
     py.ctranslate2
     # index
     py.fastembed
-    # mcp
-    py.fastmcp
+    # mcp（本地 override 掉 fastmcp-slim 的 broken 标记，见上方 let 里的说明）
+    fastmcp
   ];
 
   # nixpkgs 的 typer(0.25.1) / pydantic-settings(2.12.0) 比上游下限略旧。
