@@ -39,6 +39,9 @@
         # 提供 rust-bin.*，用于 modules/packages.nix 里的 Rust toolchain。
         overlays = [ rust-overlay.overlays.default ];
         config = {
+          # vscodium-electron 依赖 nixpkgs 的 electron 42.11.18，nixpkgs 已将
+          # 其标为 EOL/insecure；放行后才能构建 vscodium-electron。
+          permittedInsecurePackages = [ "electron-42.11.18" ];
           # 将来需要非自由包时取消注释:
           # allowUnfree = true;
         };
